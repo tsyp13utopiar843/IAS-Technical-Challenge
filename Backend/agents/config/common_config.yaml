@@ -1,0 +1,20 @@
+# Common configuration shared across all agents
+
+mqtt:
+  broker: "localhost" 
+  port: 1883
+  keepalive: 60
+  retry_delay: 5
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+state:
+  checkpoint_interval: 300  # seconds
+  buffer_size: 100
+  state_dir: "state"
+
+api:
+  host: "0.0.0.0"
+  enable_cors: true

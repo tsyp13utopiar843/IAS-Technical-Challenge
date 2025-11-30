@@ -1,0 +1,22 @@
+{
+  "agent_id": "energy_agent",
+  "status": "initializing",
+  "uptime": 6.572621,
+  "predictions_made": 0,
+  "errors": 0,
+  "last_prediction": null,
+  "prediction_history": [],
+  "metrics": {
+    "total_predictions": 0,
+    "successful_predictions": 0,
+    "failed_predictions": 0,
+    "average_latency_ms": 0.0
+  },
+  "custom_state": {
+    "last_alert_level": "NORMAL",
+    "total_energy_saved_kwh": 0.0,
+    "baseline_consumption": 100.0,
+    "optimization_count": 0
+  },
+  "timestamp": "2025-11-30T18:29:09.333480"
+}

@@ -1,0 +1,57 @@
+# Hazard Agent Configuration
+agent:
+  id: "hazard_agent"
+  name: "Workplace Hazard Detection Agent"
+  version: "2.1.0"
+
+model:
+  path: "../../safety_artifacts/rf_hazard_predictor_model.pkl"
+  scaler_path: "../../safety_artifacts/standard_scaler.pkl"
+  label_encoders_path: "../../safety_artifacts/label_encoders.pkl"  # Optional
+  num_features: 6  # temperature, vibration, pressure, gas_level, noise_level, zone_id
+
+logic:
+  thresholds:
+    critical_hazard_score: 0.8  # Hazard score threshold for CRITICAL
+    warning_hazard_score: 0.5   # Hazard score threshold for WARNING
+    evacuation_threshold: 0.9   # Hazard score threshold for EMERGENCY evacuation
+    safety_score_threshold: 40.0  # Safety score threshold (below = critical)
+
+state:
+  buffer_size: 100
+  checkpoint_interval: 300
+  checkpoint_path: "state/hazard_agent_state.json"
+
+communication:
+  mqtt:
+    broker: "localhost"
+    port: 1883
+    keepalive: 60
+    subscribe_topics:
+      - "sensors/workplace/+/telemetry"
+      - "sensors/hazard/+/detection"
+      - "factory/workplace/+/safety"
+    publish_topics:
+      - "predictions/hazard_agent"
+  
+  api:
+    port: 8004
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/hazard_agent"
+      severity: ["CAUTION", "WARNING", "CRITICAL", "EMERGENCY"]
+    - type: "email"
+      recipients: ["safety@company.com"]
+      severity: ["CRITICAL", "EMERGENCY"]
+    - type: "sms"
+      recipients: ["+1234567890"]
+      severity: ["EMERGENCY"]
+    - type: "scada"
+      severity: ["CRITICAL", "EMERGENCY"]
+    - type: "database"
+      severity: ["CAUTION", "WARNING", "CRITICAL", "EMERGENCY"]
+

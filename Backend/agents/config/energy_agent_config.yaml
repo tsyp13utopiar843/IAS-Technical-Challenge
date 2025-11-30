@@ -1,0 +1,55 @@
+# Energy Agent Configuration
+# Energy Consumption Optimization Agent Configuration
+
+agent:
+  id: "energy_agent"
+  name: "Energy Consumption Optimization Agent"
+  version: "2.1.0"
+
+model:
+  path: "../../energy.keras"  # Keras LSTM model from root
+  anomaly_model_path: ""  # Optional Isolation Forest (not provided)
+  sequence_length: 60  # 60-minute time window
+  num_features: 5  # power, hour_sin, hour_cos, temperature, production_load
+
+logic:
+  thresholds:
+    critical_efficiency: 40.0  # Efficiency score threshold for CRITICAL
+    warning_efficiency: 60.0   # Efficiency score threshold for WARNING
+    anomaly_threshold: 0.7     # Anomaly score threshold for alerts
+
+state:
+  buffer_size: 100
+  checkpoint_interval: 300  # seconds (5 minutes)
+  checkpoint_path: "state/energy_agent_state.json"
+
+communication:
+  mqtt:
+    broker: "localhost"
+    port: 1883
+    keepalive: 60
+    subscribe_topics:
+      - "factory/energy/stats"
+      - "sensors/power/+/consumption"
+      - "sensors/temperature/+/ambient"
+    publish_topics:
+      - "predictions/energy_agent"
+  
+  api:
+    port: 8002
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/energy_agent"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+    
+    - type: "email"
+      recipients: ["energy@company.com"]
+      severity: ["CRITICAL", "WARNING"]
+    
+    - type: "database"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+

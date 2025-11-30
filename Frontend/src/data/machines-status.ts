@@ -1,0 +1,153 @@
+export interface Machine {
+    id: string;
+    name: string;
+    zone: string;
+    status: "Operational" | "Faulty" | "Maintenance Pending";
+    performance: number;
+    lastChecked: string;
+    temperature: number;
+    machineType: "Hydraulic Press" | "CNC Mill" | "Conveyor Belt" | "Robotic Arm" | "Laser Cutter" | "Assembly Line";
+    maintenanceDueIn: number; // days
+}
+
+export const machinesData: Machine[] = [
+    {
+        id: "M001",
+        name: "Hydraulic Press Alpha",
+        zone: "Zone A",
+        status: "Operational",
+        performance: 98,
+        lastChecked: "2025-11-30 07:30",
+        temperature: 72,
+        machineType: "Hydraulic Press",
+        maintenanceDueIn: 15,
+    },
+    {
+        id: "M002",
+        name: "CNC Mill Delta",
+        zone: "Zone B",
+        status: "Faulty",
+        performance: 45,
+        lastChecked: "2025-11-30 08:15",
+        temperature: 95,
+        machineType: "CNC Mill",
+        maintenanceDueIn: 2,
+    },
+    {
+        id: "M003",
+        name: "Conveyor System 1",
+        zone: "Zone A",
+        status: "Operational",
+        performance: 92,
+        lastChecked: "2025-11-30 06:45",
+        temperature: 68,
+        machineType: "Conveyor Belt",
+        maintenanceDueIn: 20,
+    },
+    {
+        id: "M004",
+        name: "Robotic Arm X1",
+        zone: "Zone C",
+        status: "Maintenance Pending",
+        performance: 78,
+        lastChecked: "2025-11-30 09:00",
+        temperature: 81,
+        machineType: "Robotic Arm",
+        maintenanceDueIn: 3,
+    },
+    {
+        id: "M005",
+        name: "Laser Cutter Pro",
+        zone: "Zone B",
+        status: "Operational",
+        performance: 95,
+        lastChecked: "2025-11-30 07:15",
+        temperature: 75,
+        machineType: "Laser Cutter",
+        maintenanceDueIn: 18,
+    },
+    {
+        id: "M006",
+        name: "Assembly Line 2",
+        zone: "Zone D",
+        status: "Operational",
+        performance: 88,
+        lastChecked: "2025-11-30 08:30",
+        temperature: 70,
+        machineType: "Assembly Line",
+        maintenanceDueIn: 12,
+    },
+    {
+        id: "M007",
+        name: "Hydraulic Press Beta",
+        zone: "Zone A",
+        status: "Faulty",
+        performance: 52,
+        lastChecked: "2025-11-30 09:20",
+        temperature: 102,
+        machineType: "Hydraulic Press",
+        maintenanceDueIn: 1,
+    },
+    {
+        id: "M008",
+        name: "CNC Mill Gamma",
+        zone: "Zone C",
+        status: "Operational",
+        performance: 94,
+        lastChecked: "2025-11-30 06:50",
+        temperature: 73,
+        machineType: "CNC Mill",
+        maintenanceDueIn: 25,
+    },
+    {
+        id: "M009",
+        name: "Robotic Arm X2",
+        zone: "Zone B",
+        status: "Maintenance Pending",
+        performance: 82,
+        lastChecked: "2025-11-30 08:00",
+        temperature: 79,
+        machineType: "Robotic Arm",
+        maintenanceDueIn: 5,
+    },
+    {
+        id: "M010",
+        name: "Conveyor System 2",
+        zone: "Zone D",
+        status: "Operational",
+        performance: 96,
+        lastChecked: "2025-11-30 07:40",
+        temperature: 67,
+        machineType: "Conveyor Belt",
+        maintenanceDueIn: 22,
+    },
+    {
+        id: "M011",
+        name: "Laser Cutter X3000",
+        zone: "Zone A",
+        status: "Operational",
+        performance: 91,
+        lastChecked: "2025-11-30 09:10",
+        temperature: 76,
+        machineType: "Laser Cutter",
+        maintenanceDueIn: 14,
+    },
+    {
+        id: "M012",
+        name: "Assembly Line 1",
+        zone: "Zone C",
+        status: "Faulty",
+        performance: 38,
+        lastChecked: "2025-11-30 08:45",
+        temperature: 98,
+        machineType: "Assembly Line",
+        maintenanceDueIn: 0,
+    },
+];
+
+export const machinesOverview = {
+    totalMachines: 12,
+    operationalMachines: 7,
+    faultyMachines: 3,
+    lastMaintenanceCheck: "2025-11-30 09:20",
+};

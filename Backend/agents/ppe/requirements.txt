@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+httpx
+pydantic
+paho-mqtt
+numpy
+scikit-learn
+pyyaml
+websockets
+tensorflow

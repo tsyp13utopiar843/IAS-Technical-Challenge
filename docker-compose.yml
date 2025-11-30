@@ -1,0 +1,157 @@
+version: '3.8'
+
+services:
+  # MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Orchestrator
+  orchestrator:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: orchestrator
+    command: uvicorn agents.orchestrator.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      - CORS_ORIGINS=*
+      - PLANNER_URL=http://planner:8011
+    depends_on:
+      - mosquitto
+      - planner
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Planner
+  planner:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: planner
+    command: uvicorn agents.planner.main:app --host 0.0.0.0 --port 8011 --reload
+    ports:
+      - "8011:8011"
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # PM Agent
+  pm-agent:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: pm-agent
+    command: python agents/maint/main.py
+    ports:
+      - "8001:8001"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Energy Agent
+  energy-agent:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: energy-agent
+    command: python agents/energy/main.py
+    ports:
+      - "8002:8002"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Cyber Agent
+  cyber-agent:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: cyber-agent
+    command: python agents/cyber/main.py
+    ports:
+      - "8003:8003"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Safety Agent
+  safety-agent:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: safety-agent
+    command: python agents/safety/main.py
+    ports:
+      - "8004:8004"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # PPE Agent
+  ppe-agent:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: ppe-agent
+    command: python agents/ppe/main.py
+    ports:
+      - "8005:8005"
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+  # Publisher (Data Simulator)
+  publisher:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: publisher
+    command: python publisher/main.py
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+    networks:
+      - mas-network
+    restart: unless-stopped
+
+networks:
+  mas-network:
+    driver: bridge

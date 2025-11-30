@@ -1,0 +1,72 @@
+# API Endpoints for 6G-MAS-Factory Backend
+
+## Core Services
+
+### Orchestrator
+- **Base URL**: http://localhost:8000
+- **Description**: Central coordinator and dashboard API.
+- **Key Endpoints**:
+  - `GET /system-state`: Get current system status (alerts, decisions).
+  - `POST /alert`: Receive alerts from agents.
+
+### Planner
+- **Base URL**: http://localhost:8011
+- **Description**: AI planning service.
+- **Key Endpoints**:
+  - `POST /plan`: Generate action plans for alerts.
+
+### Protocol Gateway
+- **Base URL**: http://localhost:8010 (Recommended)
+- **Description**: Legacy HTTP gateway for MQTT data.
+
+---
+
+## AI Agents
+
+### Predictive Maintenance (PM) Agent
+- **Base URL**: http://localhost:8001
+- **WebSocket**: ws://localhost:8001/ws
+- **Config**: `agents/config/pm_agent_config.yaml`
+- **Key Endpoints**:
+  - `GET /status`: Agent health and state.
+  - `GET /history`: Prediction history.
+
+### Energy Optimization Agent
+- **Base URL**: http://localhost:8002
+- **WebSocket**: ws://localhost:8002/ws
+- **Config**: `agents/config/energy_agent_config.yaml`
+- **Key Endpoints**:
+  - `GET /status`: Agent health and state.
+  - `GET /history`: Prediction history.
+
+### Cyber Security Agent
+- **Base URL**: http://localhost:8003
+- **WebSocket**: ws://localhost:8003/ws
+- **Config**: `agents/config/cyber_agent_config.yaml`
+- **Key Endpoints**:
+  - `GET /status`: Agent health and state.
+  - `GET /history`: Prediction history.
+
+### Workplace Safety (Hazard) Agent
+- **Base URL**: http://localhost:8004
+- **WebSocket**: ws://localhost:8004/ws
+- **Config**: `agents/config/hazard_agent_config.yaml`
+- **Key Endpoints**:
+  - `GET /status`: Agent health and state.
+  - `GET /history`: Prediction history.
+
+### PPE Compliance Agent
+- **Base URL**: http://localhost:8005
+- **WebSocket**: ws://localhost:8005/ws
+- **Config**: `agents/config/ppe_agent_config.yaml`
+- **Key Endpoints**:
+  - `GET /status`: Agent health and state.
+  - `GET /history`: Prediction history.
+
+---
+
+## Integration Notes
+
+1. **WebSockets**: Connect to `ws://localhost:<PORT>/ws` to receive real-time JSON updates whenever the agent makes a prediction.
+2. **CORS**: All agents have CORS enabled by default for `*` origins in their configuration.
+3. **Swagger UI**: Visit `http://localhost:<PORT>/docs` for interactive API documentation for each service.

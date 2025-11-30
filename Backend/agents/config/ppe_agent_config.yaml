@@ -1,0 +1,56 @@
+# PPE Agent Configuration
+agent:
+  id: "ppe_agent"
+  name: "PPE Compliance Detection Agent"
+  version: "2.1.0"
+
+model:
+  path: "../../PPE_artifacts/ppe_classifier.keras"  # Keras model
+  scaler_path: "../../PPE_artifacts/scaler.pkl"
+  class_weights_path: "../../PPE_artifacts/class_weights.pkl"  # Optional
+  sequence_length: 10  # Time window for CNN
+  num_features: 6  # 6-axis IMU (accel x,y,z + gyro x,y,z)
+  smoothing_buffer_size: 5  # Majority vote buffer size
+
+logic:
+  thresholds:
+    critical_compliance_rate: 50.0  # Compliance rate threshold for CRITICAL
+    warning_compliance_rate: 75.0  # Compliance rate threshold for WARNING
+    required_items: ["helmet", "vest", "gloves"]  # Required PPE items
+
+state:
+  buffer_size: 100
+  checkpoint_interval: 300
+  checkpoint_path: "state/ppe_agent_state.json"
+
+communication:
+  mqtt:
+    broker: "localhost"
+    port: 1883
+    keepalive: 60
+    subscribe_topics:
+      - "factory/camera/+/ppe"
+      - "sensors/wearable/+/imu"
+      - "sensors/worker/+/ppe"
+    publish_topics:
+      - "predictions/ppe_agent"
+  
+  api:
+    port: 8005
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/ppe_agent"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+    - type: "email"
+      recipients: ["safety@company.com"]
+      severity: ["CRITICAL", "WARNING"]
+    - type: "database"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+    - type: "webhook"
+      url: "https://access-control.example.com/api/violation"
+      severity: ["CRITICAL"]
+

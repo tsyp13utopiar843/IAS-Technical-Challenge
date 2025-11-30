@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+paho-mqtt
+numpy
+pyyaml
+langchain
+langchain-google-genai
+google-generativeai
+

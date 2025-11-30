@@ -1,0 +1,23 @@
+{
+  "agent_id": "hazard_agent",
+  "status": "initializing",
+  "uptime": 5.563822,
+  "predictions_made": 0,
+  "errors": 0,
+  "last_prediction": null,
+  "prediction_history": [],
+  "metrics": {
+    "total_predictions": 0,
+    "successful_predictions": 0,
+    "failed_predictions": 0,
+    "average_latency_ms": 0.0
+  },
+  "custom_state": {
+    "last_alert_level": "NORMAL",
+    "active_hazards": [],
+    "zone_status": {},
+    "evacuation_count": 0,
+    "last_evacuation_time": null
+  },
+  "timestamp": "2025-11-30T18:28:44.624550"
+}

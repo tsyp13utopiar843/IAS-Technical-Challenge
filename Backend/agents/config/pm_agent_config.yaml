@@ -1,0 +1,68 @@
+# PM Agent Configuration
+# Predictive Maintenance Agent Configuration
+
+agent:
+  id: "pm_agent"
+  name: "Predictive Maintenance Agent"
+  version: "2.1.0"
+
+model:
+  path: "../../PM/rf_smote_pipeline_model.pkl"  # Relative to agent directory
+  scaler_path: "../../PM/scaler.pkl"
+  label_encoder_path: "../../PM/label_encoder.pkl"  # Optional
+  sequence_length: 60  # 60-minute time window
+  num_features: 6  # temperature, vibration, pressure, RPM, torque, tool_wear
+
+logic:
+  thresholds:
+    critical_rul: 24  # hours - CRITICAL alert
+    warning_rul: 72   # hours - WARNING alert
+    caution_rul: 168  # hours (1 week) - CAUTION alert
+    critical_failure_prob: 0.8  # EMERGENCY shutdown threshold
+
+state:
+  buffer_size: 100  # Prediction history buffer size
+  checkpoint_interval: 300  # seconds (5 minutes)
+  checkpoint_path: "state/pm_agent_state.json"
+
+communication:
+  mqtt:
+    broker: "localhost"  # Override with MQTT_BROKER env var
+    port: 1883  # Override with MQTT_PORT env var
+    keepalive: 60
+    subscribe_topics:
+      - "sensors/equipment/+/temperature"
+      - "sensors/equipment/+/vibration"
+      - "sensors/equipment/+/pressure"
+      - "sensors/equipment/+/rpm"
+      - "sensors/equipment/+/torque"
+      - "sensors/equipment/+/tool_wear"
+      - "factory/machine/+/maintenance"  # Legacy topic support
+    publish_topics:
+      - "predictions/pm_agent"
+  
+  api:
+    port: 8001
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/pm_agent"
+      severity: ["CAUTION", "WARNING", "CRITICAL", "EMERGENCY"]
+    
+    - type: "email"
+      recipients: ["maintenance@company.com"]
+      severity: ["CRITICAL", "WARNING"]
+    
+    - type: "sms"
+      recipients: ["+1234567890"]
+      severity: ["CRITICAL", "EMERGENCY"]
+    
+    - type: "database"
+      severity: ["CAUTION", "WARNING", "CRITICAL", "EMERGENCY"]
+    
+    - type: "scada"
+      severity: ["CRITICAL", "EMERGENCY"]
+

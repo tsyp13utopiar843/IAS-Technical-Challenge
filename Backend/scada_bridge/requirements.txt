@@ -1,0 +1,5 @@
+asyncua==1.0.0
+pymodbus==3.5.4
+pydnp3==0.2.3b3
+paho-mqtt==1.6.1
+python-dotenv==1.0.0

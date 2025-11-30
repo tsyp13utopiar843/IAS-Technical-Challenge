@@ -1,0 +1,49 @@
+# Backlog Agent Configuration
+agent:
+  id: "backlog_agent"
+  name: "Shift Backlog Generation Agent"
+  version: "2.1.0"
+
+model:
+  api_key: ""  # Set via GEMINI_API_KEY environment variable
+  model_name: "gemini-pro"  # or "gemini-1.5-pro"
+
+logic:
+  shift_duration_hours: 8  # 8-hour shifts
+
+state:
+  buffer_size: 1000  # Larger buffer for collecting events
+  checkpoint_interval: 300  # seconds (5 minutes)
+  checkpoint_path: "state/backlog_agent_state.json"
+  backlog_dir: "backlogs"  # Directory to save generated backlogs
+
+communication:
+  mqtt:
+    broker: "localhost"
+    port: 1883
+    keepalive: 60
+    subscribe_topics:
+      - "alerts/pm_agent"
+      - "alerts/energy_agent"
+      - "alerts/cyber_agent"
+      - "alerts/hazard_agent"
+      - "alerts/ppe_agent"
+    publish_topics:
+      - "backlogs/shift_backlog"
+  
+  api:
+    port: 8006
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/backlog_agent"
+      severity: ["WARNING", "CRITICAL"]
+    - type: "email"
+      recipients: ["operations@company.com"]
+      severity: ["CRITICAL"]
+    - type: "database"
+      severity: ["WARNING", "CRITICAL"]
+

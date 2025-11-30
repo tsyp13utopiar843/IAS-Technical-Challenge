@@ -1,0 +1,22 @@
+{
+  "agent_id": "cyber_agent",
+  "status": "initializing",
+  "uptime": 32.834111,
+  "predictions_made": 0,
+  "errors": 0,
+  "last_prediction": null,
+  "prediction_history": [],
+  "metrics": {
+    "total_predictions": 0,
+    "successful_predictions": 0,
+    "failed_predictions": 0,
+    "average_latency_ms": 0.0
+  },
+  "custom_state": {
+    "last_alert_level": "NORMAL",
+    "blocked_ips": [],
+    "threat_count": 0,
+    "last_threat_time": null
+  },
+  "timestamp": "2025-11-30T18:29:52.776739"
+}

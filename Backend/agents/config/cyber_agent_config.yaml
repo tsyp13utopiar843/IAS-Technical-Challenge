@@ -1,0 +1,53 @@
+# Cyber Agent Configuration
+agent:
+  id: "cyber_agent"
+  name: "Cyber Threat Detection Agent"
+  version: "2.1.0"
+
+model:
+  path: "../../cyber.pkl"  # Isolation Forest model from root
+  sequence_length: 10
+  num_features: 4  # latency, packet_loss, throughput, connection_count
+
+logic:
+  thresholds:
+    consecutive_threshold: 5  # Consecutive anomalies before escalation
+    critical_anomaly_score: 0.9
+    high_anomaly_score: 0.7
+
+state:
+  buffer_size: 100
+  checkpoint_interval: 300
+  checkpoint_path: "state/cyber_agent_state.json"
+
+communication:
+  mqtt:
+    broker: "localhost"
+    port: 1883
+    keepalive: 60
+    subscribe_topics:
+      - "factory/network/stats"
+      - "sensors/network/+/latency"
+      - "sensors/network/+/packet_loss"
+    publish_topics:
+      - "predictions/cyber_agent"
+  
+  api:
+    port: 8003
+    host: "0.0.0.0"
+    enable_cors: true
+
+alerts:
+  channels:
+    - type: "mqtt"
+      topic: "alerts/cyber_agent"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+    - type: "email"
+      recipients: ["security@company.com"]
+      severity: ["CRITICAL", "WARNING"]
+    - type: "sms"
+      recipients: ["+1234567890"]
+      severity: ["CRITICAL"]
+    - type: "database"
+      severity: ["CAUTION", "WARNING", "CRITICAL"]
+
