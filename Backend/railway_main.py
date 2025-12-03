@@ -13,9 +13,10 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def run_orchestrator():
-    """Run Orchestrator on port 8000"""
+    """Run Orchestrator on port from PORT env var (Railway) or default 8000"""
     from agents.orchestrator.main import app
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
 
 def run_planner():
     """Run Planner on port 8011"""  
