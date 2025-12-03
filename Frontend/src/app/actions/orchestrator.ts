@@ -2,8 +2,9 @@
 
 import { SystemState } from "@/types/agent";
 
-const ORCHESTRATOR_URL =
-    process.env.ORCHESTRATOR_URL || "http://localhost:8000";
+const BASE_URL =
+    process.env.NEXT_PUBLIC_API_GATEWAY || "http://localhost:8080";
+const ORCHESTRATOR_PATH = "/api/orchestrator";
 
 /**
  * Fetch system-wide state from the Orchestrator
@@ -11,13 +12,16 @@ const ORCHESTRATOR_URL =
  */
 export async function fetchSystemState(): Promise<SystemState | null> {
     try {
-        const response = await fetch(`${ORCHESTRATOR_URL}/system-state`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store", // Ensure fresh data
-        });
+        const response = await fetch(
+            `${BASE_URL}${ORCHESTRATOR_PATH}/system-state`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                cache: "no-store", // Ensure fresh data
+            }
+        );
 
         if (!response.ok) {
             console.error(
@@ -40,13 +44,16 @@ export async function fetchSystemState(): Promise<SystemState | null> {
  */
 export async function fetchOrchestratorStatus(): Promise<any> {
     try {
-        const response = await fetch(`${ORCHESTRATOR_URL}/status`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        });
+        const response = await fetch(
+            `${BASE_URL}${ORCHESTRATOR_PATH}/status`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                cache: "no-store",
+            }
+        );
 
         if (!response.ok) {
             console.error(

@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from agents.utils.notifications import notifier
+
 app = FastAPI()
 
 # Enable CORS for Dashboard
@@ -20,18 +22,21 @@ app.add_middleware(
 
 PLANNER_URL = os.getenv("PLANNER_URL", "http://localhost:8011")
 
+
 class Alert(BaseModel):
     level: str
     type: str
     source: str
     details: str
 
+
 # In-memory store for system state (for Dashboard)
 system_state = {
     "alerts": [],
     "decisions": [],
-    "last_update": datetime.datetime.utcnow().isoformat()
+    "last_update": datetime.datetime.utcnow().isoformat(),
 }
+
 
 @app.post("/alert")
 async def receive_alert(alert: Alert):
@@ -47,7 +52,7 @@ async def receive_alert(alert: Alert):
             decision_record = {
                 "timestamp": datetime.datetime.utcnow().isoformat(),
                 "alert": alert.dict(),
-                "plan": plan
+                "plan": plan,
             }
             system_state["decisions"].insert(0, decision_record)
             system_state["alerts"].insert(0, alert.dict())
@@ -58,16 +63,26 @@ async def receive_alert(alert: Alert):
             
             print(f"Executed Plan: {plan['action']}")
             
+            # 3. Trigger Twilio notification for critical alerts
+            if alert.level.upper() == "CRITICAL":
+                await notifier.send_alert(
+                    severity=alert.level,
+                    message=alert.details,
+                    source_agent=alert.source,
+                )
+
             return {"status": "handled", "action": plan["action"]}
             
     except Exception as e:
         print(f"Error querying planner: {e}")
         return {"status": "error", "details": str(e)}
 
+
 @app.get("/system-state")
 async def get_system_state():
     system_state["last_update"] = datetime.datetime.utcnow().isoformat()
     return system_state
+
 
 @app.get("/status")
 async def get_status():

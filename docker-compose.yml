@@ -33,6 +33,25 @@ services:
       - mas-network
     restart: unless-stopped
 
+  # API Gateway (Nginx reverse proxy)
+  nginx:
+    image: nginx:alpine
+    container_name: mas-api-gateway
+    ports:
+      - "8080:80"  # Single public HTTP entrypoint
+    volumes:
+      - ./Backend/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - orchestrator
+      - pm-agent
+      - energy-agent
+      - cyber-agent
+      - safety-agent
+      - ppe-agent
+    networks:
+      - mas-network
+    restart: unless-stopped
+
   # Planner
   planner:
     build:

@@ -1,0 +1,13 @@
+[build]
+  command = "pnpm build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[context.production.environment]
+  # Override this in Netlify UI with your real backend gateway URL, e.g.:
+  # NEXT_PUBLIC_API_GATEWAY = "https://mas-backend-production.up.railway.app"
+  NEXT_PUBLIC_API_GATEWAY = "https://your-backend-api-gateway.example.com"
+
+
